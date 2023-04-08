@@ -4,7 +4,7 @@ using TwitchLib.Client.Models;
 
 namespace GPTwitchBot.Twitch
 {
-    internal class TwitchBot
+    public class TwitchBot
     {
         string _token = "";
         string _botChannel = "";
@@ -21,7 +21,6 @@ namespace GPTwitchBot.Twitch
         public string MessageSender { get => messageSender; }
 
         public event EventHandler OnChatMentionMessageReceived;
-        public event EventHandler OnChatQuestionMessageReceived;
 
         public TwitchBot(string token, string bot, string streamer)
         {
@@ -36,25 +35,14 @@ namespace GPTwitchBot.Twitch
             _client = new TwitchClient();
             _client.Initialize(_credentials, _streamChannel);
             _client.OnMessageReceived += Client_OnMentionMessageReceived;
-            _client.OnMessageReceived += Client_OnQuestionMessageReceived;
             _client.Connect();
-        }
-
-        private void Client_OnQuestionMessageReceived(object? sender, OnMessageReceivedArgs e)
-        {
-            if (e.ChatMessage.Message.ToLower().Contains('?') && (e.ChatMessage.Message.ToLower().Contains(BotChannel) == false))
-            {
-                _receivedMessage = e.ChatMessage.Message;
-                messageSender = e.ChatMessage.DisplayName;
-                OnChatQuestionMessageReceived.Invoke(this, new EventArgs());
-            }
         }
 
         private void Client_OnMentionMessageReceived(object? sender, OnMessageReceivedArgs e)
         {
             if (e.ChatMessage.Message.ToLower().Contains(BotChannel))
             {
-                _receivedMessage = e.ChatMessage.Message.Substring(BotChannel.Length + 1);
+                _receivedMessage = e.ChatMessage.Message;
                 messageSender = e.ChatMessage.DisplayName;
                 OnChatMentionMessageReceived.Invoke(this, new EventArgs());
             }
