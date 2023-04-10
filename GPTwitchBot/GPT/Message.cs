@@ -2,7 +2,7 @@
 
 namespace GPTwitchBot.GPT
 {
-    internal class Message
+    public class Message
     {
         [JsonPropertyName("role")]
         public string Role { get; set; } = "";

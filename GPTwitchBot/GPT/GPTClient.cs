@@ -1,27 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.Net.Http.Json;
 
 namespace GPTwitchBot.GPT
 {
-    internal class GPTClient
+    public class GPTClient
     {
-        string _apiKey = "api_Key";
-        string _endpoint = "https://api.openai.com/v1/chat/completions";
-       // List<Message> _messages;
-        HttpClient _httpClient;
+        string? _apiKey;
+        string? _endpoint;
+        HttpClient? _httpClient;
 
-       //public List<Message> Messages { get => _messages; set => _messages = value; }
-
-        public GPTClient()
+        public void Initialize(string apiKey, string endpoint)
         {
-           // _messages = new List<Message>();
             _httpClient = new HttpClient();
+            _apiKey = apiKey;
+            _endpoint = endpoint;
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_apiKey}");
         }
 
@@ -29,7 +20,7 @@ namespace GPTwitchBot.GPT
         {
             var requestData = new Request() { ModelId = "gpt-3.5-turbo", Messages = messages };
 
-            using var response = await _httpClient.PostAsJsonAsync(_endpoint, requestData);
+            using var response = await _httpClient!.PostAsJsonAsync(_endpoint, requestData);
             ResponseData? responseData = await response.Content.ReadFromJsonAsync<ResponseData>();
             var choices = responseData?.Choices ?? new List<Choice>();
             if (choices.Count == 0)
@@ -39,7 +30,7 @@ namespace GPTwitchBot.GPT
             var choice = choices[0];
             var responseMessage = choice.Message;
             messages.Add(responseMessage);
-            return responseMessage.Content.Trim();      
+            return responseMessage.Content.Trim();
         }
 
     }
