@@ -17,6 +17,7 @@ IHostBuilder CreateHostBuilder(string[] args)
         {
             services.AddSingleton<GPTClient>();
             services.AddSingleton<TwitchBot>();
+            services.AddSingleton<Users>();
             services.AddSingleton<GPTwitchClient>();
         });
 }                                

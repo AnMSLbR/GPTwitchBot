@@ -4,16 +4,19 @@ namespace GPTwitchBot.GPT
 {
     public class GPTClient
     {
-        string? _apiKey;
-        string? _endpoint;
+        string _apiKey = string.Empty;
+        string _endpoint = string.Empty;
         HttpClient? _httpClient;
 
-        public void Initialize(string apiKey, string endpoint)
+        public void Initialize(string? apiKey, string? endpoint)
         {
-            _httpClient = new HttpClient();
-            _apiKey = apiKey;
-            _endpoint = endpoint;
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_apiKey}");
+            if (apiKey is not null && endpoint is not null)
+            {
+                _httpClient = new HttpClient();
+                _apiKey = apiKey;
+                _endpoint = endpoint;
+                _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_apiKey}");    
+            }
         }
 
         public async Task<string> ChatAsync(List<Message> messages)

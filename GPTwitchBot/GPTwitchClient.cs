@@ -9,23 +9,23 @@ namespace GPTwitchBot
         private readonly IConfiguration _config;
         private readonly GPTClient _gptClient;
         private readonly TwitchBot _twitchBot;
-        private List<User> _users;
-        private string _answer = "";
-        private Message _message;
-        private string _preset;
+        private Users _users;
+        private string _answer = string.Empty;
+        private Message? _message;
+        private string _preset = string.Empty;
 
-        public GPTwitchClient(IConfiguration config, GPTClient gptClient, TwitchBot twitchBot)
+        public GPTwitchClient(IConfiguration config, GPTClient gptClient, TwitchBot twitchBot, Users users)
         {
             _config = config;
             _gptClient = gptClient;
             _twitchBot = twitchBot;
-            _users = new List<User>();
+            _users = users;
         }
 
         public void Run()
         {
             _gptClient.Initialize(_config["chatGPT:apiKey"], _config["chatGPT:endPoint"]);
-            _preset = _config["chatGPT:preset"];
+            _preset = _config["chatGPT:preset"] ?? string.Empty;
             _twitchBot.OnChatMentionMessageReceived += Bot_OnChatMentionMessageReceived;
             _twitchBot.Start(_config["twitch:token"], _config["twitch:botChannel"], _config["twitch:streamChannel"]);
             while (true)
@@ -42,7 +42,8 @@ namespace GPTwitchBot
         {
             if (_twitchBot.MessageSender.ToLower() != _twitchBot.BotChannel)
             {
-                int index = DistributeMessageToUser(_twitchBot.MessageSender, _twitchBot.ReceivedMessage);
+                string message = _preset + _twitchBot.ReceivedMessage.ToLower().Replace($"@{_twitchBot.BotChannel}", "").Replace($"{_twitchBot.BotChannel}", "").Trim();
+                int index = _users.AddMessageToHistory(_twitchBot.MessageSender, message);
                 await ReplyToMessageAsync(_users[index]);
             }
         }
@@ -63,38 +64,5 @@ namespace GPTwitchBot
             user.LastMessageDate = DateTime.Now;
             _twitchBot.Send("@" + user.Name + " " + _answer);
         }
-
-        private int DistributeMessageToUser(string messageSender, string message)
-        {
-            int index;
-            string text = message.ToLower().Replace($"@{messageSender}", "").Replace($"{messageSender}", "");
-
-            if ((index = _users.FindIndex(u => u.Name == messageSender)) == -1)
-            {
-                User newUser = new User()
-                {
-                    Name = messageSender,
-                    LastMessageDate = DateTime.Now,
-                    ChatHistory = new List<Message>() { new Message() { Role = "user", Content = _preset + text } }
-                };
-                if (_users.Count < 100)
-                {
-                    _users.Add(newUser);
-                    index = _users.Count - 1;
-                }
-                else
-                {
-                    index = _users.FindIndex(u => u == _users.Min());
-                    _users[index] = newUser;
-                }
-            }
-            else
-            {
-                _users[index].LastMessageDate = DateTime.Now;
-                _users[index].ChatHistory.Add(new Message() { Role = "user", Content = _preset + text });
-            }
-            return index;
-        }
-
     }
 }
