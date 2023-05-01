@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GPTwitchBot", "GPTwitchBot\GPTwitchBot.csproj", "{1B7882C4-39A5-467B-A288-223F780A7998}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPTwitchBot.Tests", "GPTwitchBot.Tests\GPTwitchBot.Tests.csproj", "{7D943106-A8B8-4A47-B917-EF9315474140}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{1B7882C4-39A5-467B-A288-223F780A7998}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B7882C4-39A5-467B-A288-223F780A7998}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B7882C4-39A5-467B-A288-223F780A7998}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D943106-A8B8-4A47-B917-EF9315474140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D943106-A8B8-4A47-B917-EF9315474140}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D943106-A8B8-4A47-B917-EF9315474140}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D943106-A8B8-4A47-B917-EF9315474140}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

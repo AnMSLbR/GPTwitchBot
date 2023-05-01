@@ -36,7 +36,7 @@ public class Users
         if (index == -1)
         {
             User newUser = new User();
-            if (_userList.Count <= 100)
+            if (_userList.Count < 100)
             {
                 _userList.Add(newUser);
                 index = _userList.Count - 1;
